@@ -80,7 +80,8 @@ class HouseholdGraph():
         person_count = int(os.environ.get("PERSON_COUNT", 5))
         household_graph = networkx.Graph()
         for _ in range(person_count):
-            household_graph.add_node(random_name(), value=Person())
+            name = random_name()
+            household_graph.add_node(name, value=Person(name))
 
         return household_graph
 
@@ -97,6 +98,8 @@ def merge_graphs(main_graph, graph_to_add, edge_chance):
     ret = main_graph.copy()
     ret.add_nodes_from(graph_to_add.nodes())
     ret.add_edges_from(graph_to_add.edges())
+    for node in graph_to_add:
+        ret.nodes[node]['value'] = graph_to_add.nodes[node]['value']
     for node1 in graph_to_add.nodes():
         for node2 in main_graph.nodes():
             if random.random() < edge_chance:
