@@ -14,14 +14,18 @@ class Person():
         # likelihood of exposing someone else to the virus
         self.chance_to_spread_virus = float(os.environ.get('VIRUS_SPREAD_RATE', '0.3')) * 2 * random.random()
         # how social a person is, as a percentage of neighbors they will see that day
-        self.sociability = random.random() * 0.8
+        self.sociability = float(os.environ.get('SOCIABILITY_AVERAGE', '0.4')) * 2 * random.random()
         self.healthy_after_date = -1
+        self.not_immune_after = -1
         self.current_state = 'HEALTHY'
         self.future_state = 'HEALTHY'
 
 
     # iterate through neighbors and perform action
     def iterate(self):
+        if self.current_state == 'IMMUNE':
+            if self.not_immune_after < global_state.cycle_number:
+                self.future_state = 'HEALTHY'
         if self.current_state == 'INFECTED':
             if self.check_if_illness_gone():
                 return
@@ -36,13 +40,12 @@ class Person():
     def check_if_illness_gone(self):
         if self.healthy_after_date < global_state.cycle_number:
             self.future_state = 'IMMUNE'
+            self.not_immune_after = global_state.cycle_number + int(random.random() * 2 * int(os.environ.get('IMMUNITY_PERIOD', '180')))
             return True
         return False
 
     def roll_to_die(self):
-        # expected infection duration is 7 days. If you are infected for more than 7 days
-        # you will roll additional times, meaning you are more likely to die.
-        if random.random() < self.chance_of_death / 7:
+        if random.random() < self.chance_of_death / int(os.environ.get('INFECTION_LENGTH', '7')):
             self.current_state = 'DEAD'
             self.future_state = 'DEAD'
             return True
@@ -55,9 +58,11 @@ class Person():
             # successful roll to spread
             if random.random() < neighbor.chance_to_catch_virus:
                 # successfully exposed to viral load
-                neighbor.future_state = 'INFECTED'
-                neighbor.healthy_after_date = global_state.cycle_number + int(14 * random.random())
+                neighbor.infect()
 
+    def infect(self):
+        self.future_state = 'INFECTED'
+        self.healthy_after_date = global_state.cycle_number + int(int(os.environ.get('INFECTION_LENGTH', '7')) * random.random())
 
     def update_state(self):
         self.current_state = self.future_state

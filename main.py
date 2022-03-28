@@ -1,5 +1,6 @@
 from simulation.covid_graph import CovidGraph
 from simulation.simulator import Simulator
+import analysis.grapher as grapher
 from dotenv import load_dotenv
 import networkx
 
@@ -15,31 +16,8 @@ def main():
 
     simulator = Simulator(covid_graph.flat_graph)
     simulator.scenario('PERSON')
-    simulator.simulate()
-
-    print(
-        len(
-            [x for x in simulator.person_list if x.current_state == 'HEALTHY']
-        )
-    )
-
-    print(
-        len(
-            [x for x in simulator.person_list if x.current_state == 'INFECTED']
-        )
-    )
-
-    print(
-        len(
-            [x for x in simulator.person_list if x.current_state == 'DEAD']
-        )
-    )
-
-    print(
-        len(
-            [x for x in simulator.person_list if x.current_state == 'IMMUNE']
-        )
-    )
+    simulator.simulate(10000)
+    grapher.build_graph(simulator.output)
 
 
 
