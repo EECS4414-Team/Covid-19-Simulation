@@ -18,6 +18,7 @@ def main():
     simulator.scenario('PERSON')
     simulator.simulate(10000)
     grapher.build_graph(simulator.output)
+    grapher.build_early_infection_graph(simulator.output)
 
 
 
