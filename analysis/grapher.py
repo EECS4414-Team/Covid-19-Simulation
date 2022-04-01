@@ -3,7 +3,7 @@ import simulation.global_state as global_state
 import matplotlib.pyplot as plt
 
 
-def build_graph(tuple_list):
+def build_graph(tuple_list, graph_name):
     healthy = [x[0] for x in tuple_list]
     infected = [x[1] for x in tuple_list]
     dead = [x[2] for x in tuple_list]
@@ -21,10 +21,10 @@ def build_graph(tuple_list):
     plt.xticks(list(range(1, global_state.cycle_number, global_state.cycle_number//10)))
     plt.legend(handles=[line1,line2,line3,line4])
     plt.title('count of states each person is in')
-    plt.savefig('graphs/main_graph.png')
+    plt.savefig(f'graphs/{graph_name}_total_graph.png')
     plt.clf()
 
-def build_early_infection_graph(tuple_list):
+def build_early_infection_graph(tuple_list, graph_name):
     healthy = [x[0] for x in tuple_list][:global_state.cycle_number//10]
     infected = [x[1] for x in tuple_list][:global_state.cycle_number//10]
     dead = [x[2] for x in tuple_list][:global_state.cycle_number//10]
@@ -42,6 +42,6 @@ def build_early_infection_graph(tuple_list):
     plt.xticks(list(range(1, global_state.cycle_number//10, global_state.cycle_number//100)))
     plt.legend(handles=[line1,line2,line3,line4])
     plt.title('count of states each person is in')
-    plt.savefig('graphs/early_infection_graph.png')
+    plt.savefig(f'graphs/{graph_name}_early_graph.png')
     plt.clf()
 
