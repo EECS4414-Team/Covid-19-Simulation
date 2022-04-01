@@ -80,11 +80,11 @@ class Simulator():
             return
         elif self.intervention_type == 'NULL_MODEL':
             for person in self.person_list:
-                person.antisocial == True
+                person.antisocial = True
         elif self.intervention_type == 'OPTIMIZED':
-            top_100 = sorted(list(global_state.covid_graph.degree), key=lambda x: x[1])[:100]
-            for person, _ in top_100:
-                self.person_dict[person].antisocial = True
+            top_n = sorted(list(global_state.covid_graph.degree), key=lambda x: x[1])[:1000]
+            for person, _ in top_n:
+                self.person_dict[person].removed = True
 
     def ease_social_intervention(self):
         if self.intervention_type == 'NONE':
@@ -92,11 +92,11 @@ class Simulator():
             return
         elif self.intervention_type == 'NULL_MODEL':
             for person in self.person_list:
-                person.antisocial == False
+                person.antisocial = False
         elif self.intervention_type == 'OPTIMIZED':
-            top_100 = sorted(list(global_state.covid_graph.degree), key=lambda x: x[1])[:100]
-            for person, _ in top_100:
-                self.person_dict[person].antisocial = False
+            top_n = sorted(list(global_state.covid_graph.degree), key=lambda x: x[1])[:1000]
+            for person, _ in top_n:
+                self.person_dict[person].removed = False
 
 
 

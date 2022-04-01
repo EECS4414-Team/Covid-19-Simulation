@@ -18,6 +18,7 @@ class Person():
         self.healthy_after_date = -1
         self.not_immune_after = -1
         self.antisocial = False
+        self.removed = False
         self.current_state = 'HEALTHY'
         self.future_state = 'HEALTHY'
 
@@ -25,6 +26,7 @@ class Person():
         self.healthy_after_date = -1
         self.not_immune_after = -1
         self.antisocial = False
+        self.removed = False
         self.current_state = 'HEALTHY'
         self.future_state = 'HEALTHY'
 
@@ -41,7 +43,12 @@ class Person():
                 return
             neighbor_list = [global_state.covid_graph.nodes[x]['value'] for x in global_state.covid_graph.neighbors(self.name)]
             for neighbor in neighbor_list:
-                if random.random() < (self.sociability if not self.antisocial else self.sociability / 10):
+                threshold = self.sociability
+                if self.antisocial:
+                    threshold = self.sociability * 0.75
+                elif self.removed:
+                    threshold = 0
+                if random.random() < threshold:
                     self.roll_to_infect(neighbor)
 
 

@@ -14,6 +14,8 @@ def main():
     print(len(max(networkx.connected_components(covid_graph.flat_graph), key=len)))
     key = list(covid_graph.flat_graph.nodes)[0]
 
+    degrees = [val for name, val in covid_graph.flat_graph.degree]
+
 
     simulator = Simulator(covid_graph.flat_graph)
     seed = 174398573985
