@@ -1,11 +1,14 @@
 import random
+
+from scipy import rand
 import simulation.global_state as global_state
 
 class Simulator():
 
     intervention_types = ['NONE', 'NULL_MODEL', 'OPTIMIZED']
 
-    def __init__(self, covid_graph):
+    def __init__(self, covid_graph, hierarchy_graph):
+        self.hierarchy_graph = hierarchy_graph
         self.covid_graph = covid_graph
         self.person_list = [covid_graph.nodes[x]['value'] for x in covid_graph.nodes()]
         self.person_dict = {person.name: person for person in self.person_list}
@@ -73,30 +76,48 @@ class Simulator():
                 self.ease_social_intervention()
                 self.intervention_status = False
 
+    random_sample = None
+    def random_sample_of_people(self):
+        if Simulator.random_sample:
+            return Simulator.random_sample
+        random_people = random.sample(self.person_list, 1500)
+        Simulator.random_sample = random_people
+        return random_people
+
 
     def social_intervention(self):
         if self.intervention_type == 'NONE':
             # do nothing
             return
         elif self.intervention_type == 'NULL_MODEL':
+            for person in self.random_sample_of_people():
+                person.removed = True
+        elif self.intervention_type == 'OPTIMIZED':
+            cities = self.hierarchy_graph.get_people()
+            for city in cities:
+                top_150 = sorted([(person, global_state.covid_graph.degree(person.name)) for person in city], key=lambda x: -x[1])[:150]
+                for person, _ in top_150:
+                    person.removed = True
+        elif self.intervention_type == 'OPTIMAL':
             for person in self.person_list:
                 person.antisocial = True
-        elif self.intervention_type == 'OPTIMIZED':
-            top_n = sorted(list(global_state.covid_graph.degree), key=lambda x: x[1])[:1000]
-            for person, _ in top_n:
-                self.person_dict[person].removed = True
 
     def ease_social_intervention(self):
         if self.intervention_type == 'NONE':
             # do nothing
             return
         elif self.intervention_type == 'NULL_MODEL':
-            for person in self.person_list:
-                person.antisocial = False
+            for person in self.random_sample_of_people():
+                person.removed = False
         elif self.intervention_type == 'OPTIMIZED':
-            top_n = sorted(list(global_state.covid_graph.degree), key=lambda x: x[1])[:1000]
-            for person, _ in top_n:
-                self.person_dict[person].removed = False
+            cities = self.hierarchy_graph.get_people()
+            for city in cities:
+                top_150 = sorted([(person, global_state.covid_graph.degree(person.name)) for person in city], key=lambda x: -x[1])[:150]
+                for person, _ in top_150:
+                    person.removed = False
+        elif self.intervention_type == 'OPTIMAL':
+            for person in self.person_list:
+                person.antisocial = True
 
 
 

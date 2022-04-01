@@ -10,6 +10,10 @@ class CovidGraph():
         self.hierarchy_graph = CountryGraph()
         self.flat_graph = self.hierarchy_graph.flattened()
 
+    def get_people_per_city(self):
+        return self.hierarchy_graph.get_people()
+
+
 
 class CountryGraph():
     def __init__(self):
@@ -22,6 +26,12 @@ class CountryGraph():
             graph.add_node(random_name(), value=CityGraph())
 
         return graph
+
+    def get_people(self):
+        ret = []
+        for city in self.cities.nodes():
+            ret.append(self.cities.nodes[city]['value'].get_people())
+        return ret
 
     def flattened(self):
         return_graph = networkx.Graph()
@@ -44,6 +54,12 @@ class CityGraph():
 
         return graph
 
+    def get_people(self):
+        ret = []
+        for neighborhood in self.neighborhoods.nodes():
+            ret.extend(self.neighborhoods.nodes[neighborhood]['value'].get_people())
+        return ret
+
     def flattened(self):
         return_graph = networkx.Graph()
         for sub_graph in self.neighborhoods.nodes():
@@ -63,6 +79,12 @@ class NeighborhoodGraph():
             graph.add_node(random_name(), value=HouseholdGraph())
 
         return graph
+
+    def get_people(self):
+        ret = []
+        for household in self.households.nodes():
+            ret.extend(self.households.nodes[household]['value'].get_people())
+        return ret
 
     def flattened(self):
         return_graph = networkx.Graph()
@@ -84,6 +106,13 @@ class HouseholdGraph():
             household_graph.add_node(name, value=Person(name))
 
         return household_graph
+
+    def get_people(self):
+        ret = []
+        for person in self.people.nodes():
+            ret.append(self.people.nodes()[person]['value'])
+        return ret
+
 
     def flattened(self):
         ret = self.people.copy()

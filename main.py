@@ -8,6 +8,7 @@ import random
 load_dotenv()
 
 def main():
+    random.seed(2149)
     covid_graph = CovidGraph()
     print(covid_graph.flat_graph.number_of_nodes())
     print(covid_graph.flat_graph.number_of_edges())
@@ -16,10 +17,9 @@ def main():
 
     degrees = [val for name, val in covid_graph.flat_graph.degree]
 
-
-    simulator = Simulator(covid_graph.flat_graph)
+    simulator = Simulator(covid_graph.flat_graph, covid_graph.hierarchy_graph)
     seed = 174398573985
-    for type in ['NONE', 'NULL_MODEL', 'OPTIMIZED']:
+    for type in ['NONE', 'NULL_MODEL', 'OPTIMIZED', 'OPTIMAL']:
         random.seed(seed)
         print(f'Running simulation for {type}')
         simulator.scenario('PERSON')

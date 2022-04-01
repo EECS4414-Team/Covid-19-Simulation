@@ -46,7 +46,7 @@ class Person():
                 threshold = self.sociability
                 if self.antisocial:
                     threshold = self.sociability * 0.75
-                elif self.removed:
+                if self.removed:
                     threshold = 0
                 if random.random() < threshold:
                     self.roll_to_infect(neighbor)
