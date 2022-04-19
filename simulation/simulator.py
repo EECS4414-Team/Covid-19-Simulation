@@ -95,8 +95,8 @@ class Simulator():
         elif self.intervention_type == 'OPTIMIZED':
             cities = self.hierarchy_graph.get_people()
             for city in cities:
-                top_150 = sorted([(person, global_state.covid_graph.degree(person.name)) for person in city], key=lambda x: -x[1])[:150]
-                for person, _ in top_150:
+                top_300 = sorted([(person, global_state.covid_graph.degree(person.name)) for person in city], key=lambda x: -x[1])[:300]
+                for person, _ in top_300:
                     person.removed = True
         elif self.intervention_type == 'OPTIMAL':
             for person in self.person_list:
@@ -112,12 +112,12 @@ class Simulator():
         elif self.intervention_type == 'OPTIMIZED':
             cities = self.hierarchy_graph.get_people()
             for city in cities:
-                top_150 = sorted([(person, global_state.covid_graph.degree(person.name)) for person in city], key=lambda x: -x[1])[:150]
-                for person, _ in top_150:
+                top_300 = sorted([(person, global_state.covid_graph.degree(person.name)) for person in city], key=lambda x: -x[1])[:300]
+                for person, _ in top_300:
                     person.removed = False
         elif self.intervention_type == 'OPTIMAL':
             for person in self.person_list:
-                person.antisocial = True
+                person.antisocial = False
 
 
 

@@ -24,7 +24,7 @@ def main():
         print(f'Running simulation for {type}')
         simulator.scenario('PERSON')
         simulator.intervention_scenario(type)
-        simulator.simulate(1000)
+        simulator.simulate(10000)
         grapher.build_graph(simulator.output, type)
         grapher.build_early_infection_graph(simulator.output, type)
         simulator.reset()

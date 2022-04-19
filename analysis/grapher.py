@@ -1,4 +1,3 @@
-from glob import glob
 import simulation.global_state as global_state
 import matplotlib.pyplot as plt
 

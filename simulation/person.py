@@ -45,7 +45,7 @@ class Person():
             for neighbor in neighbor_list:
                 threshold = self.sociability
                 if self.antisocial:
-                    threshold = self.sociability * 0.75
+                    threshold = self.sociability * 0.6
                 if self.removed:
                     threshold = 0
                 if random.random() < threshold:
